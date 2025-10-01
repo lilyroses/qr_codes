@@ -33,54 +33,34 @@ def switch_bit(bit_coordinate:tuple[int]):
     update_bit(new_bit_value, bit_coordinate)
 
 
-
-def get_binary_digits(val, bit_len=''):
-    bits = [int(n) for n in str(bin(val))[2:]]
-    if bit_len and len(bits) != bit_len:
-
-
-
-def XOR(bit_value_1, bit_value_2):
+def XOR(val1, val2):
     """
     Perform simple XOR ^ operation on two binary values (0 or 1).
     """
     # assert (bit_value_1 in (0,1) and bit_value_2 in (0,1)), "Bit values must be either 0 or 1"
-    bin_1 = [int(n) for n in str(bin(bit_value_1))[2:]]
-    bin_2 = [int(n) for n in str(bin(bit_value_2))[2:]]
+
+    bin_1 = bin(val1)[2:]
+    bin_2 = bin(val2)[2:]
 
     x = len(bin_1)
     y = len(bin_2)
+
     if x != y:
         n = max(x,y)
-        missing_digits = abs(x-y)
-        for i in range(missing_digits):
-            # if bin_1 has the most digits, update bin_2 with 0s
-            if x == n:
-                bin_2.insert(0)
-            elif y == n:
-                bin_1.insert(0)
+        pad_zeroes = "0" * abs(x-y)
+        if x == n:
+            bin_2 = pad_zeroes + bin_2
+        elif y == n:
+            bin_1 = pad_zeroes + bin_1
+
+    bits_1 = [int(b) for b in bin_1]
 
 
 
-
-bit_value_1 = 256
-bit_value_2 = 285
-
-bin_1 = [int(n) for n in str(bin(bit_value_1))[2:]]
-bin_2 = [int(n) for n in str(bin(bit_value_2))[2:]]
+val_1 = 285
+bin_1 = [int(n) for n in bin(val_1)[2:]]
 
 print(bin_1)
-print(bin_2)
+# b = "".join([str(n) for n in xor_vals])
 
-x, y = len(bin_1), len(bin_2)
-
-
-xor_vals = []
-for i in range(x):
-    a = bin_1[i]
-    b = bin_2[i]
-    xor_vals.append(XOR(a, b))
-
-b = "".join([str(n) for n in xor_vals])
-
-print(int(b,2))
+# print(int(b,2))

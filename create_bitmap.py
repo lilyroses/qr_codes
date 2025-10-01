@@ -1,9 +1,8 @@
 from PIL import Image
 
-size = (21,21)
 
-img = Image.new("L", size, color=255)
-
-pixels = img.load()
-
-img.save("test.bmp")
+def create_bitmap(size, img_name):
+    img = Image.new("L", size, color=255)
+    pixels = img.load()
+    img.save(img_name)
+    print(f"{img_name} created")
