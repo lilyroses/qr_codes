@@ -13,6 +13,7 @@ from data import (
 
 ###############################################################################
 
+# STEP 1. ANALYZE DATA
 def analyze_data(msg:str):
     """Determine appropriate encoding scheme for the message so the fewest
     bits are used."""
@@ -25,18 +26,21 @@ def analyze_data(msg:str):
 
 ##############################################################################
 
-"""STEP 2. ENCODE DATA
+# STEP 2. ENCODE DATA
 
-Consists of the following steps:
-    1. Choose error correction level
-    2. Determine smallest version for data
-    3. Add mode indicator
-    4. Add character count indicator
-    5. Encode using the selected mode
-    6. Break up into 8-bit codewords and add pad bytes if necessary
-"""
+# Consists of the following steps:
+#     1. Choose error correction level (given as parameter for encode())
+#     2. Determine smallest version for data
+#     3. Add mode indicator
+#     4. Add character count indicator
+#     5. Encode using the selected mode
+#     6. Break up into 8-bit codewords and add pad bytes if necessary
 
-# STEP 1. DETERMINE VERSION NUMBER 
+# 2.1 CHOOSE ERROR CORRECTION LEVEL 
+# set as parameter for encode()
+
+
+# 2.2 DETERMINE VERSION NUMBER
 def get_version_number(msg, mode, ec_lvl="Q"):
     """
     Find the minumum QR matrix size required to contain the characters in
@@ -77,7 +81,7 @@ def get_character_count_indicator(msg, version, mode):
     return char_count_indicator
 
 
-# STEP 5. ENCODE USING DETERMINED MODE
+# STEP 4. ENCODE USING DETERMINED MODE
 def encode_numeric(msg):
     """Split the message into groups of 3 numbers. The final group may be 1 or
     2 numbers. If a group starts with one zero it is a 2-digit number. If a
@@ -145,7 +149,7 @@ def encode_msg(msg, ec_lvl="Q"):
     """Encode the message using the given mode and version number."""
     mode = analyze_data(msg)
     version = get_version_number(msg, mode, ec_lvl)
-    mode_indicator = MODE_NAME_INDICATOR_BITS_MAP[mode]
+    mode_indicator = get_mode_indicator(mode)
     character_count_indicator = get_character_count_indicator(msg, version, mode)
 
     if mode == "NUM":
