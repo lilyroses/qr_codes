@@ -54,13 +54,3 @@ def XOR(val1, val2):
             bin_1 = pad_zeroes + bin_1
 
     bits_1 = [int(b) for b in bin_1]
-
-
-
-val_1 = 285
-bin_1 = [int(n) for n in bin(val_1)[2:]]
-
-print(bin_1)
-# b = "".join([str(n) for n in xor_vals])
-
-# print(int(b,2))

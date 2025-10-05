@@ -62,7 +62,7 @@ def mask_6(bit_coordinate:tuple[int]):
 
 
 # MASK 7
-def mask_4(bit_coordinate:tuple[int]):
+def mask_7(bit_coordinate:tuple[int]):
     column, row = bit_coordinate
     return (((row + column) % 2) + ((row * column) % 3)) % 2 == 0
         # switch_bit(bit_coordinate)
