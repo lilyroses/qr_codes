@@ -2,66 +2,135 @@
 import json
 from data import (
     ALPHANUMERIC_CHARSET,
-    ALPHANUMERIC_CHARSET_VALUE_MAP,
-    CHARACTER_CAPACITIES_MAP,
-    CHARACTER_COUNT_INDICATOR_LENGTHS_MAP,
+    ALPHANUMERIC_CHARSET_VALUES,
+    CHARACTER_CAPACITIES,
+    CHARACTER_COUNT_INDICATORS,
     ERROR_CORRECTION_LEVELS,
     MODE_NAMES,
-    MODE_NAME_INDICATOR_BITS_MAP,
+    MODE_NAME_INDICATOR_BITS,
     NUMERIC_CHARSET
 )
 
+
 ###############################################################################
 
+
 # STEP 1. ANALYZE DATA
-def analyze_data(msg:str):
+# ----------------------------------------------------------------
+# Determine which encoding scheme is needed for the message data in order
+# to produce the smallest amount of bits possible. Kanji mode is also an
+# encoding scheme supported by the QR code specification, but it is not
+# implemented here. This may change in future versions.
+#
+# Encoding schemes supported by this tool are:
+# 	NUMERIC 	(0-9)
+#	ALPHANUMERIC	(0-9, A-Z, several symbols)
+# 	BYTE		(0-9, A-Z, a-z, symbols)
+
+
+def analyze_data(msg:str) -> str:
     """Determine appropriate encoding scheme for the message so the fewest
     bits are used."""
     msg_chars = set(msg)
+    # Numeric mode
     if set(msg).issubset(NUMERIC_CHARSET):
-        return "NUM"
+        return "NUMERIC"
+    # Alphanumeric mode
     if set(msg).issubset(ALPHANUMERIC_CHARSET):
-        return "ALPHANUM"
+        return "ALPHANUMERIC"
+    # Byte mode
     return "BYTE"
+
 
 ##############################################################################
 
+
 # STEP 2. ENCODE DATA
-
+# ----------------------------------------------------------------
 # Consists of the following steps:
-#     1. Choose error correction level (given as parameter for encode())
-#     2. Determine smallest version for data
-#     3. Add mode indicator
-#     4. Add character count indicator
-#     5. Encode using the selected mode
-#     6. Break up into 8-bit codewords and add pad bytes if necessary
+# 	1. Choose error correction level (given as parameter for encode())
+#     	2. Determine smallest version for data
+#     	3. Add mode indicator
+#     	4. Add character count indicator
+#     	5. Encode using the selected mode
+#     	6. Break up into 8-bit codewords and add pad bytes if necessary
 
-# 2.1 CHOOSE ERROR CORRECTION LEVEL 
-# set as parameter for encode()
+
+# 2.1 CHOOSE ERROR CORRECTION LEVEL
+# ----------------------------------------------------------------
+# There are 4 levels of error correction, each denoted by a letter.
+# The value associated with each level indicates the maximum percentage
+# of the QR code that can be damaged while still being readable by QR scanners.
+#
+# The error correction level can be set as an argument for the
+# `encode()` function.
+#
+# ERROR CORRECTION LEVELS AND PERCENT MAXIMUM DAMAGE ALLOWED:
+#	L:  7
+#	M: 15 %
+#	Q: 25 %
+#	H: 30 %
 
 
 # 2.2 DETERMINE VERSION NUMBER
-def get_version_number(msg, mode, ec_lvl="Q"):
+# ----------------------------------------------------------------
+# QR code version numbers refer to the size of the QR matrix in pixel
+# height and width. Each QR matrix is exactly as wide as it is tall.
+# The single value associated with each version number indicates the
+# pixel height as well as the pixel width.
+#
+# The smallest version, Version 1, is 21 x 21 pixels. Each sucessive
+# version increments in size by 4 pixels, capping at 177 x 177 pixels
+# for Version 40. Each version number is capable of encoding a specific
+# number of data codewords and error correction codewords. Each error
+# correction level and version number combination has a specific number
+# of data codewords and error correction codewords that can be encoded
+# by that size QR code. The values denoting bit storage for each mode
+# and error correction level combination are stored in `data.py` and
+# can be accessed with `CHARACTER_CAPACITIES[ec_lvl][mode]`.
+#
+# +-----------+------+
+# | Version # | Size |
+# +-----------+------+
+# |    1      |  21  |
+# |    2      |  25  |
+# |    3      |  29  |
+# |    4      |  33  |
+# |    5      |  37  |
+# |   ...     | (+4) |
+# |   40      | 177  |
+# +-----------+------+
+
+
+def get_version_number(msg:str, mode:str, ec_lvl="Q"):
     """
     Find the minumum QR matrix size required to contain the characters in
     msg, using the message length, the encoding mode, and the error correction
     level."""
     n = len(msg)
 
-    for version_num, info in CHARACTER_CAPACITIES_MAP.items():
+    for version_num, info in CHARACTER_CAPACITIES.items():
         char_cap = info[ec_lvl][mode]
         if char_cap >= n:
             return version_num
-    
+
     return f"Message is too long for mode {mode} with EC level {ec_lvl}"
+
+
+###################################################################>
+
 
 # STEP 2. ADD MODE INDICATOR
 def get_mode_indicator(mode):
     """Return mode indicator bit string for message encoding type."""
     assert mode in MODE_NAMES, f"{mode} not recognized (options are {MODE_NAMES})"
-    
-    mode_indicator = MODE_NAME_INDICATOR_BITS_MAP[mode]
+
+    mode_indicator = MODE_NAME_INDICATOR_BITS[mode]
     return mode_indicator
+
+
+###################################################################>
+
 
 # STEP 3. ADD CHARACTER COUNT INDICATOR
 def get_character_count_indicator(msg, version, mode):
@@ -74,11 +143,14 @@ def get_character_count_indicator(msg, version, mode):
     n = len(msg)
     bin_str = bin(n)[2:]
 
-    indicator_str_len = CHARACTER_COUNT_INDICATOR_LENGTHS_MAP[version][mode]
+    indicator_str_len = CHARACTER_COUNT_INDICATOR_LENGTHS[version][mode]
     pad_zeroes = "0" * (indicator_str_len - len(bin_str))
 
     char_count_indicator = pad_zeroes + bin_str
     return char_count_indicator
+
+
+###################################################################>
 
 
 # STEP 4. ENCODE USING DETERMINED MODE
@@ -106,7 +178,7 @@ def encode_alphanumeric(msg):
     odd number of characters in the message), take the value of that character
     and convert it to a 6-bit binary string."""
     chunk_size = 2
-    char_values = [ALPHANUMERIC_CHARSET_VALUE_MAP[char] for char in msg]
+    char_values = [ALPHANUMERIC_CHARSET_VALUE[char] for char in msg]
     char_value_pairs = [char_values[i:i+chunk_size] for i in range(0, len(char_values), chunk_size)]
 
     binary_strs = []
@@ -136,10 +208,13 @@ def encode_byte(msg):
     return binary_strs
 
 
+###################################################################>
+
+
 def get_num_required_bits(mode, version, ec_lvl):
     """Find required number of data bits for the QR code's version number, error
     correction level, and encoding mode."""
-    required_codewords = CHARACTER_CAPACITIES_MAP[version][ec_lvl][mode]
+    required_codewords = CHARACTER_CAPACITIES[version][ec_lvl][mode]
     required_bits = required_codewords * 8
     return required_bits
 
@@ -152,9 +227,9 @@ def encode_msg(msg, ec_lvl="Q"):
     mode_indicator = get_mode_indicator(mode)
     character_count_indicator = get_character_count_indicator(msg, version, mode)
 
-    if mode == "NUM":
+    if mode == "NUMERIC":
         binary_strs = encode_numeric(msg)
-    elif mode == "ALPHANUM":
+    elif mode == "ALPHANUMERIC":
         binary_strs = encode_alphanumeric(msg)
     elif mode == "BYTE":
         binary_strs == encode_byte(msg)
