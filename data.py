@@ -31,5 +31,5 @@ with open("character_capacities.json", "r") as f:
     CHARACTER_CAPACITIES = json.load(f)
 
 # CHARACTER COUNT INDICATOR LENGTHS
-with open("character_count_indicator_lengths.json", "r") as f:
+with open("character_count_indicators.json", "r") as f:
     CHARACTER_COUNT_INDICATORS = json.load(f)

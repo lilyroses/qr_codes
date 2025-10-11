@@ -143,7 +143,7 @@ def get_character_count_indicator(msg, version, mode):
     n = len(msg)
     bin_str = bin(n)[2:]
 
-    indicator_str_len = CHARACTER_COUNT_INDICATOR_LENGTHS[version][mode]
+    indicator_str_len = CHARACTER_COUNT_INDICATORS[version][mode]
     pad_zeroes = "0" * (indicator_str_len - len(bin_str))
 
     char_count_indicator = pad_zeroes + bin_str
@@ -158,7 +158,7 @@ def encode_numeric(msg):
     """Split the message into groups of 3 numbers. The final group may be 1 or
     2 numbers. If a group starts with one zero it is a 2-digit number. If a
     group starts with 2 zeroes it is a 1-digit number. Convert 3-digit numbers
-    to 10-bit binary numbers. Convert 2-digit numbers to 7-bit binary numbers.
+t    to 10-bit binary numbers. Convert 2-digit numbers to 7-bit binary numbers.
     1-digit chunks should be converted to 4-digit binary numbers."""
     chunk_size = 3
     msg_chunks = [msg[i:i+chunk_size] for i in range(0, len(msg), chunk_size)]
@@ -178,7 +178,7 @@ def encode_alphanumeric(msg):
     odd number of characters in the message), take the value of that character
     and convert it to a 6-bit binary string."""
     chunk_size = 2
-    char_values = [ALPHANUMERIC_CHARSET_VALUE[char] for char in msg]
+    char_values = [ALPHANUMERIC_CHARSET_VALUES[char] for char in msg]
     char_value_pairs = [char_values[i:i+chunk_size] for i in range(0, len(char_values), chunk_size)]
 
     binary_strs = []
@@ -241,4 +241,4 @@ def encode_msg(msg, ec_lvl="Q"):
 
 print(encode_msg("8675309"))
 print(encode_msg("HELLO WORLD"))
-print(encode_msg("Hello there, world!"))
+#print(encode_msg("Hello there, world!"))
