@@ -1,29 +1,32 @@
-t = 2
-m = 285
-x = 256
+# gf256.py
+from pprint import pprint
 
-powers = []
 
-log_table = {}
+a = 2  # base (2**n)
+mod_int = 285  # modulus value
+gf_min, gf_max = (0,256)
+gf256 = range(gf_min,gf_max)
+
+powers = []  #
 antilog_table = {}
 
-
-for i in range(x):
-  if i == 0:
-    val = t**i
+for exp in gf256:
+  if exp == 0:
+    power = a**exp
   else:
-    val = powers[-1] * 2
-    if val >= x:
-      val = val ^ m
-  powers.append(val)
-  log_table[i] = val
+    power = powers[-1] * a
+    if power >= gf_max:
+      power = power ^ mod_int
 
-  if val not in antilog_table:
-    antilog_table[val] = i
+  powers.append(power)
 
-with open("log_table.py", "w") as f:
-  f.write(f"""log_table = {log_table}""")
+  if power not in antilog_table:
+    antilog_table[power] = exp
 
-with open("antilog_table.py", "w") as f:
-  f.write(f"""antilog_table = {antilog_table}""")
 
+print("\n\nLOG TABLE:")
+log_table = dict(zip(gf256, powers))
+pprint(log_table)
+
+print("\n\nANTILOG TABLE:")
+pprint(antilog_table)

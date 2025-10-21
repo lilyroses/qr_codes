@@ -1,15 +1,22 @@
-from error_correction_polynomials import error_correction_polynomials
-from create_generator_polynomials import print_polynomial
+import csv
+from pprint import pprint
 
 
-def get_generator_polynomial(num_codewords:int) -> list[tuple[int]]:
-  return error_correction_polynomials[num_codewords]
+INF = "error_correction_codewords.csv"
+with open(INF, "r") as f:
+  lines = [line.strip() for line in f.readlines()]
 
 
-def get_readable_generator_polynomial(num_codewords:int) -> list[tuple[int]]:
-  print(f"\nGENERATOR POLYNOMIAL FOR {num_codewords} CODEWORDS:")
-  print(print_polynomial(error_correction_polynomials[num_codewords]))
+DATA_CODEWORDS_PER_MATRIX = {}
 
+for line in lines[1:]:
+  items = line.split("\t")
+  version, ec_lvl = items[0].split("-")
+  version = int(version)
 
-if __name__ == "__main__":
-  get_readable_generator_polynomial(8)
+  if version not in DATA_CODEWORDS_PER_MATRIX:
+    DATA_CODEWORDS_PER_MATRIX[version] = {} 
+  data_cw = int(items[1])
+  DATA_CODEWORDS_PER_MATRIX[version][ec_lvl] = data_cw
+
+pprint(DATA_CODEWORDS_PER_MATRIX)

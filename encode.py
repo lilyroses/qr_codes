@@ -158,11 +158,10 @@ def encode_numeric(msg):
     """Split the message into groups of 3 numbers. The final group may be 1 or
     2 numbers. If a group starts with one zero it is a 2-digit number. If a
     group starts with 2 zeroes it is a 1-digit number. Convert 3-digit numbers
-t    to 10-bit binary numbers. Convert 2-digit numbers to 7-bit binary numbers.
+    to 10-bit binary numbers. Convert 2-digit numbers to 7-bit binary numbers.
     1-digit chunks should be converted to 4-digit binary numbers."""
     chunk_size = 3
     msg_chunks = [msg[i:i+chunk_size] for i in range(0, len(msg), chunk_size)]
-
     # convert each chunk into a 10, 7, or 4-bit binary number.
     binary_strs = [bin(int(chunk))[2:] for chunk in msg_chunks]
     return binary_strs
