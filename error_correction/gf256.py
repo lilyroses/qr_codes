@@ -1,4 +1,7 @@
 # gf256.py
+"""Create log and antilog tables for Galois field 256 (values
+0-255. 
+"""
 from pprint import pprint
 
 
