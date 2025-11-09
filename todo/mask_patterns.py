@@ -1,4 +1,4 @@
-# mask_patterns.py
+ # mask_patterns.py
 """QR code readabilty can be improved by using one of eight mask patterns.
 Each mask pattern uses a specific formula (detailed below) which is applied to
 each bit in the QR matrix. The formula uses each bit's coordinates and current
