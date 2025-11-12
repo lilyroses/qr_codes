@@ -142,11 +142,17 @@ def convert_binary_codewords_to_ints(encoded_bytes):
 
 msg = "HELLO WORLD"
 #msg = get_msg()
+
 mode = get_mode(msg)
+
 ec_lvl = "M"
 #ec_lvl = get_ec_lvl()
+
 version = get_version(msg, mode, ec_lvl)
 
 cws = get_data_cws(msg, mode, version, ec_lvl)
 print(cws)
 
+ex = "00100000 01011011 00001011 01111000 11010001 01110010 11011100 01001101 01000011 01000000 11101100 00010001 11101100 00010001 11101100 00010001"
+ex = ex.split()
+print(cws==ex)
