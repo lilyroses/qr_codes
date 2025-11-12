@@ -1,9 +1,6 @@
-from pprint import pprint
-
 INF = "num_codewords_by_version_ec_level.txt"
 with open(INF, "r") as f:
   lines = [line.strip() for line in f.readlines()]
-
 
 headers = [
   "version",
@@ -46,9 +43,10 @@ for line in lines[1:]:
   if version not in NUM_CODEWORDS:
     NUM_CODEWORDS[version] = {}
   else:
-    NUM_CODEWORDS[version][ec_lvl] = {}
+    NUM_CODEWORDS[version] [ec_lvl] = {}
   d = dict(zip(headers[2:], vals[2:]))
 
   NUM_CODEWORDS[version][ec_lvl] = d
 
-pprint(NUM_CODEWORDS)
+from pprint_to_file import pprint_to_file
+pprint_to_file(NUM_CODEWORDS,"NUM_CODEWORDS", "data2.py", "a")
