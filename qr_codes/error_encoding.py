@@ -8,45 +8,22 @@ from data import (
 )
 
 
-def get_alpha_notation(poly):
-  alpha_poly = []
-  for a, x in poly:
-    alpha = ANTILOG_TABLE[a]
-    alpha_poly.append((alpha, x))
-  return alpha_poly
+class Polynomial:
+  self.num_times_divided = 0
+
+  def __init__(self, terms, notation):
+    self.terms = terms
+    self.notation = notation
 
 
-def get_int_poly(poly):
-  int_poly = []
-  for a, x in poly:
-    int_a = LOG_TABLE[a]
-    int_poly.append((int_a, x))
-  return int_poly
-
-
-def multiply_polynomial(poly, term):
-  new_poly = []
-  a2, x2 = term
-  for a,x in poly:
-    new_a = a + a2
-    if new_a > 255:
-      new_a = new_a % 255
-    new_x = x + x2
-    new_poly.append((new_a, new_x))
-  return new_poly
-
-
-def xor_polynomials(p1, p2):
-  new_poly = []
-  for i in range(len(p1)):
-    a = p1[i][0]
-    a2 = p2[i][0]
-    x = p1[i][1]
-    new_a = a ^ a2
-    print(f"{a} ^ {a2} = {new_a}")
-    new_term = (new_a, x)
-    new_poly.append(new_term)
-  return new_poly
+  def get_alpha_notation(self):
+    if self.notation == "int":
+    alpha_terms = []
+      for i, x in poly:
+        alpha = ANTILOG_TABLE[i]
+        alpha_terms.append((alpha, x))
+    alpha_poly = Polynomial(alpha_terms)
+    return alpha_poly
 
 
 ec_lvl = "M"

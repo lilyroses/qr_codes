@@ -161,7 +161,6 @@ if __name__ == "__main__":
   import io
   output = io.StringIO()
   with open("error_correction_polynomials.py", "w") as f:
-  
     p = pprint(ec_polynomials, sort_dicts=False, indent=4, stream=output)
     fp = output.getvalue()
     s = f"ERROR_CORRECTION_POLYNOMIALS = {fp}"

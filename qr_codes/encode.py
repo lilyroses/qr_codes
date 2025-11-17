@@ -1,3 +1,4 @@
+import sys
 from data import (
   ALPHANUMERIC_CHARSET,
   CHARACTER_CAPACITIES,
@@ -17,7 +18,8 @@ def get_msg():
       print("Error: message cannot be empty.")
     else:
       if msg.lower() == "q":
-        return "Exiting..."
+        print("Exiting...")
+        sys.exit()
       confirm = input(f"You entered:\n\n{msg}\n\nConfirm? (y/n): ")
       if confirm.lower() == "y":
         return msg
