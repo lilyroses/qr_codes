@@ -1,4 +1,4 @@
-ERROR_CORRECTION_POLYNOMIALS = {  
+ERROR_CORRECTION_POLYNOMIALS = {
     1: ((0, 1), (0, 0)),
     2: [(0, 2), (25, 1), (1, 0)],
     3: [(0, 3), (198, 2), (199, 1), (3, 0)],
@@ -32616,4 +32616,5 @@ ERROR_CORRECTION_POLYNOMIALS = {
              (4, 3),
              (3, 2),
              (2, 1),
-             (1, 0)]}
+             (1, 0)]
+}

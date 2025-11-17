@@ -1,4 +1,5 @@
 INF = "num_codewords_by_version_ec_level.txt"
+OUTF = "NUM_CODEWORDS.py"
 with open(INF, "r") as f:
   lines = [line.strip() for line in f.readlines()]
 
@@ -49,4 +50,4 @@ for line in lines[1:]:
   NUM_CODEWORDS[version][ec_lvl] = d
 
 from pprint_to_file import pprint_to_file
-pprint_to_file(NUM_CODEWORDS,"NUM_CODEWORDS", "data2.py", "a")
+pprint_to_file(NUM_CODEWORDS, "NUM_CODEWORDS", OUTF)
