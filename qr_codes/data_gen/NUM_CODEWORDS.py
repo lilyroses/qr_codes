@@ -1,5 +1,4 @@
-NUM_CODEWORDS = {
-    1: {'L': {   'total_data_cws': 19,
+NUM_CODEWORDS = {   1: {   'L': {   'total_data_cws': 19,
                     'total_ec_cws': 7,
                     'ec_cws_per_block': 7,
                     'g1_blocks': 1,

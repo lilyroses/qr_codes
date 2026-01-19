@@ -11,43 +11,51 @@ from data import (
 
 
 # GET MSG
-def get_msg():
-  while True:
-    msg = input("\nMessage to encode (q to quit): ")
-    if not msg:
-      print("Error: message cannot be empty.")
-    else:
-      if msg.lower() == "q":
-        print("Exiting...")
-        sys.exit()
-      confirm = input(f"You entered:\n\n{msg}\n\nConfirm? (y/n): ")
-      if confirm.lower() == "y":
-        return msg
-      else:
-        continue
+def get_msg() -> str:
+    while True:
+        text_to_encode = input("\Text to encode (q to quit): ")
+        if not text_to_encode:
+            print("Error: Text to encode cannot be an empty string.")
+        else:
+            if text_to_encode.lower() == "q":
+                print("Exiting...")
+                sys.exit()
+            confirm = input(f"You entered:\n\n{text_to_encode}\n\nConfirm? (y/n): ")
+            if confirm.lower() == "y":
+                return text_to_encode
+            else:
+                continue
 
 
 # GET EC LVL
-def get_ec_lvl():
-  while True:
-    ec_lvl = input("EC lvl: ").upper()
-    if not ec_lvl:
-      ec_lvl = "Q"
-    if ec_lvl in ERROR_CORRECTION_LEVELS:
-      return ec_lvl
-    print(f"Invalid error correction level. Options are: {list(ERROR_CORRECTION_LEVELS.keys())}")
+def get_ec_lvl() -> str:
+    
+    print(f"\nEnter the error correction level to apply to QR code. Valid \
+levels are [L, M, Q, H], where L has the lowest error correction and H has \
+the highest. If no errror correction level is entered, default level 'Q' will \
+be applied.")
+    
+    while True:
+        error_correction_level = input("Error correction level: ").upper()
+        if not error_correction_level:
+            error_correction_level = "Q"
+        if error_correction_level not in ERROR_CORRECTION_LEVELS:
+            print(f"Invalid error correction level. Options are: {ERROR_CORRECTION_LEVELS}")
+        else:
+            break
+        return ec_lvl
 
 
 # ------------------------------------------------------------
 
 
 # ENCODE DATA
-def encode(msg, ec_lvl):
+def encode(text_to_encode: str, error_correction_level: str) -> str:
   # GET MODE
-  def get_mode(msg):
-    if set(msg).issubset(NUMERIC_CHARSET):
+  def get_mode(text_to_encode: str) -> str:
+    if set(text_to_encode).issubset(NUMERIC_CHARSET):
       mode = "NUMERIC"
-    elif set(msg).issubset(ALPHANUMERIC_CHARSET):
+    elif set(text_to_encode).issubset(ALPHANUMERIC_CHARSET):
       mode = "ALPHANUMERIC"
     else:
       mode = "BYTE"
@@ -55,8 +63,9 @@ def encode(msg, ec_lvl):
 
 
   # GET VERSION
-  def get_version(msg, ec_lvl, mode):
-    n = len(msg)
+  def get_version(text_to_encode: str, ec_lvl: str,
+                  mode: str) -> int:
+    n = len(text_to_encode)
     for version, info in CHARACTER_CAPACITIES.items():
       char_cap = info[ec_lvl][mode]
       if char_cap >= n:
@@ -224,5 +233,6 @@ def encode(msg, ec_lvl):
 if __name__ == "__main__":
   msg = get_msg()
   ec_lvl = get_ec_lvl()
-  data_codewords = encode(msg, ec_lvl)
-  print(data_codewords)
+  encoded_data = encode(msg, ec_lvl)
+  print(encoded_data)
+  

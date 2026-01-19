@@ -115,7 +115,7 @@ def combine_like_terms(terms:list[tuple[int]]):
   # start a list of tuples containing the final terms starting with non-like terms
   final_terms = [(a_exp,x_exp) for (a_exp,x_exp) in terms if x_exp not in x_exp_counts]
 
-  # Step 2: get the a exponent integer values by looking up their log values
+  # Step 2: get the alpha exponent integer values by looking up their log values
   for like_x_exp in x_exp_counts:
     like_a_exps = [a_exp for (a_exp, x_exp) in terms if x_exp == like_x_exp]
     a_exp_ints = [LOG_TABLE[a_exp] for a_exp in like_a_exps]
